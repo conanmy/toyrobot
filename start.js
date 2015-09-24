@@ -1,12 +1,23 @@
 var robot = require('./robot');
 
-var handleInput = function(input) {
+/**
+ * parse input
+ * @param  {[type]} input [description]
+ * @return {[type]}       [description]
+ */
+var parseInput = function(input) {
     var matches = input.toString().match(/(\w+)(.*)/);
-    var command = matches[1].toLowerCase();
-    var args = matches[2].trim();
+    return {
+        command: matches[1].toLowerCase(),
+        args: matches[2].trim()
+    };
+};
+
+var handleInput = function(input) {
+    var parsedInput = parseInput(input);
     
-    if (robot[command]) {
-        robot[command](args);
+    if (robot[parsedInput.command]) {
+        robot[parsedInput.command](parsedInput.args);
     } else {
         console.log('Alert: Command invalid');
     }
@@ -14,4 +25,5 @@ var handleInput = function(input) {
 
 process.stdin.on('data', handleInput);
 
+exports.parseInput = parseInput;
 exports.handleInput = handleInput;

@@ -3,8 +3,18 @@ var robotFace = null;
 var CONSTRAINT = [[0, 4], [0, 4]];  // table boundary
 var DIRECTIONS = ['NORTH', 'EAST', 'SOUTH', 'WEST'];
 
+/**
+ * check placed from position
+ * @param  {Array} position
+ * @param  {string} face
+ * @return {boolean}
+ */
+exports.checkPlacedFromPosition = function(position, face) {
+    return position !== null && face !== null;
+};
+
 exports.checkPlaced = function() {
-    if (robotPosition !== null && robotFace !== null) {
+    if (this.checkPlacedFromPosition(robotPosition, robotFace)) {
         return true;
     } else {
         console.log('ALert: Robot not placed.');
@@ -43,6 +53,24 @@ exports.checkPlaceArgsFormat = function(args) {
 };
 
 /**
+ * parse place arguments
+ * @param  {string} args
+ * @return {Object}
+ */
+exports.parsePlaceArgs = function(args) {
+    var position = args.split(',');
+    var face = position.pop().toUpperCase();
+    // transform to number
+    for (var key in position) {
+        position[key] = position[key] - 0;
+    }
+    return {
+        position: position,
+        face: face
+    };
+};
+
+/**
  * check position in boundary
  * @param  {Array} position
  * @return {boolean} pass or not
@@ -70,25 +98,11 @@ exports.checkAndReposition = function(position) {
 };
 
 /**
- * parse place arguments
- * @param  {string} args
- * @return {Object}
- */
-exports.parsePlaceArgs = function(args) {
-    var position = args.split(',');
-    var face = position.pop().toUpperCase();
-    return {
-        position: position,
-        face: face
-    };
-};
-
-/**
  * place command
  * @param  {string} args arguments
  */
 exports.place = function(args) {
-    if (!this.checkArgsFormat(args)) {
+    if (!this.checkPlaceArgsFormat(args)) {
         return;
     }
     var parsedArgs = this.parsePlaceArgs(args);
@@ -190,4 +204,9 @@ exports.report = function() {
     );
     console.log(report);
     return report;
+};
+
+exports.reset = function() {
+    robotPosition = null;
+    robotFace = null;
 };
