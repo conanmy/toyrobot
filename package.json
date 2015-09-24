@@ -1,0 +1,23 @@
+{
+  "name": "robot",
+  "version": "1.0.0",
+  "description": "A toy robot simulator.",
+  "main": "start.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conanmy/toyrobot.git"
+  },
+  "keywords": [
+    "robot",
+    "io"
+  ],
+  "author": "Frank Ma",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
+  }
+}
