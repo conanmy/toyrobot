@@ -5,7 +5,11 @@ var handleInput = function(input) {
     var command = matches[1].toLowerCase();
     var args = matches[2].trim();
     
-    robot[command](args);
+    if (robot[command]) {
+        robot[command](args);
+    } else {
+        console.log('Alert: Command invalid');
+    }
 };
 
 process.stdin.on('data', handleInput);

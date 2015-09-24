@@ -3,7 +3,7 @@ var robotFace = null;
 var CONSTRAINT = [[0, 4], [0, 4]];  // table boundary
 var DIRECTIONS = ['NORTH', 'EAST', 'SOUTH', 'WEST'];
 
-var checkPlaced = function() {
+exports.checkPlaced = function() {
     if (robotPosition !== null && robotFace !== null) {
         return true;
     } else {
@@ -12,7 +12,12 @@ var checkPlaced = function() {
     }
 };
 
-var checkArgsFormat = function(args) {
+/**
+ * check place command argument format
+ * @param  {string} args in a format like '0,1,NORTH'
+ * @return {boolean} pass or not
+ */
+exports.checkPlaceArgsFormat = function(args) {
     args = args.split(',');
     var reportError = function() {
         console.log('Alert: Place command argument error.');
@@ -37,15 +42,25 @@ var checkArgsFormat = function(args) {
     }
 };
 
-var checkPosition = function(position) {
+/**
+ * check position in boundary
+ * @param  {Array} position
+ * @return {boolean} pass or not
+ */
+exports.checkPosition = function(position) {
     return position[0]>=CONSTRAINT[0][0]
         && position[0]<=CONSTRAINT[0][1]
         && position[1]>=CONSTRAINT[1][0]
         && position[1]<=CONSTRAINT[1][1];
 };
 
-var checkAndReposition = function(position) {
-    if (checkPosition(position)) {
+/**
+ * check position and then reset robot position
+ * @param  {Array} position
+ * @return {boolean}
+ */
+exports.checkAndReposition = function(position) {
+    if (this.checkPosition(position)) {
         robotPosition = position;
         return true;
     } else {
@@ -54,44 +69,76 @@ var checkAndReposition = function(position) {
     }
 };
 
-exports.place = function(args) {
-    if (!checkArgsFormat(args)) {
-        return;
-    }
+/**
+ * parse place arguments
+ * @param  {string} args
+ * @return {Object}
+ */
+exports.parsePlaceArgs = function(args) {
     var position = args.split(',');
     var face = position.pop().toUpperCase();
-    if (checkAndReposition(position)) {
-        robotFace = face;
+    return {
+        position: position,
+        face: face
+    };
+};
+
+/**
+ * place command
+ * @param  {string} args arguments
+ */
+exports.place = function(args) {
+    if (!this.checkArgsFormat(args)) {
+        return;
     }
+    var parsedArgs = this.parsePlaceArgs(args);
+    if (this.checkAndReposition(parsedArgs.position)) {
+        robotFace = parsedArgs.face;
+    }
+};
+
+/**
+ * move from postion
+ * @param  {Array} position
+ * @param  {string} face
+ * @return {Array} new position
+ */
+exports.moveFromPostion = function(position, face) {
+    var newPosition = position.slice(0);
+    switch(face) {
+        case 'NORTH':
+            newPosition[1]++;
+            break;
+        case 'SOUTH':
+            newPosition[1]--;
+            break;
+        case 'EAST':
+            newPosition[0]--;
+            break;
+        case 'WEST':
+            newPosition[0]++;
+            break;
+    }
+    return newPosition;
 };
 
 exports.move = function() {
-    if (!checkPlaced()) {
+    if (!this.checkPlaced()) {
         return;
     }
-    var position = robotPosition.slice(0);
-    switch(robotFace) {
-        case 'NORTH':
-            position[1]++;
-            break;
-        case 'SOUTH':
-            position[1]--;
-            break;
-        case 'EAST':
-            position[0]--;
-            break;
-        case 'WEST':
-            position[0]++;
-            break;
-    }
-    checkAndReposition(position);
+    this.checkAndReposition(
+        this.moveFromPostion(robotPosition, robotFace)
+    );
 };
 
-exports.turn = function(hand) {
-    if (!checkPlaced()) {
-        return;
-    }
-    var index = DIRECTIONS.indexOf(robotFace);
+/**
+ * turn from face
+ * @param  {string} face
+ * @param  {string} hand left or right
+ * @return {string} new face direction
+ */
+exports.turnFromFace = function(face, hand) {
+    var index = DIRECTIONS.indexOf(face);
     switch(hand) {
         case 'left':
             index--;
@@ -100,7 +147,18 @@ exports.turn = function(hand) {
             index++;
             break;
     }
-    robotFace = DIRECTIONS[(index+4)%4];
+    return DIRECTIONS[(index+4)%4];
+};
+
+/**
+ * turn command
+ * @param  {string} hand left or right
+ */
+exports.turn = function(hand) {
+    if (!this.checkPlaced()) {
+        return;
+    }
+    robotFace = this.turnFromFace(robotFace, hand);
 };
 
 exports.left = function() {
@@ -111,13 +169,25 @@ exports.right = function() {
     this.turn('right');
 };
 
+/**
+ * report form position
+ * @param  {Array} position
+ * @param  {string} face
+ * @return {string} report, in a format like '0,1,NORTH'
+ */
+exports.reportFromPostion = function(position, face) {
+    var report = position.slice(0);
+    report.push(face);
+    return report.join(',');
+};
+
 exports.report = function() {
-    if (!checkPlaced()) {
+    if (!this.checkPlaced()) {
         return;
     }
-    var position = robotPosition.slice(0);
-    position.push(robotFace);
-    var report = position.join(',');
+    var report = this.reportFromPostion(
+        robotPosition, robotFace
+    );
     console.log(report);
     return report;
 };

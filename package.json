@@ -4,6 +4,7 @@
   "description": "A toy robot simulator.",
   "main": "start.js",
   "scripts": {
+    "start": "node start.js",
     "test": "mocha"
   },
   "repository": {
