@@ -17,7 +17,7 @@ exports.checkPlaced = function() {
     if (this.checkPlacedFromPosition(robotPosition, robotFace)) {
         return true;
     } else {
-        console.log('ALert: Robot not placed.');
+        console.log('Alert: Robot not placed.');
         return false;
     }
 };
@@ -30,7 +30,7 @@ exports.checkPlaced = function() {
 exports.checkPlaceArgsFormat = function(args) {
     args = args.split(',');
     var reportError = function() {
-        console.log('Alert: Place command argument error.');
+        throw new Error('Place command argument error.');
     };
 
     if (args.length === 3) {

@@ -19,11 +19,17 @@ var handleInput = function(input) {
     if (robot[parsedInput.command]) {
         robot[parsedInput.command](parsedInput.args);
     } else {
-        console.log('Alert: Command invalid');
+        throw new Error('Command invalid');
     }
 };
 
-process.stdin.on('data', handleInput);
+process.stdin.on('data', function(input) {
+    try {
+        handleInput(input);
+    } catch (e) {
+        console.log(e);
+    }
+});
 
 exports.parseInput = parseInput;
 exports.handleInput = handleInput;

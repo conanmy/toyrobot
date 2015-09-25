@@ -12,8 +12,9 @@ describe('robot unit test', function() {
     it('checkPlaceArgsFormat', function() {
         expect(robot.checkPlaceArgsFormat('1,3,east'))
             .to.equal(true);
-        expect(robot.checkPlaceArgsFormat('east'))
-            .to.equal(false);
+        expect(function() {
+            robot.checkPlaceArgsFormat('east');
+        }).to.throw(Error);
     });
 
     it('parsePlaceArgs', function() {

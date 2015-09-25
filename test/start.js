@@ -26,6 +26,8 @@ describe('start unit test', function() {
     });
 
     it('ignore invalid command', function() {
-        start.handleInput('Give me five');
+        expect(function() {
+            start.handleInput('Give me five');
+        }).to.throw(Error);
     });
 });
