@@ -2,8 +2,8 @@ var robot = require('./robot');
 
 /**
  * parse input
- * @param  {[type]} input [description]
- * @return {[type]}       [description]
+ * @param  {string} input
+ * @return {Object}
  */
 var parseInput = function(input) {
     var matches = input.toString().match(/(\w+)(.*)/);
