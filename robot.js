@@ -120,16 +120,16 @@ exports.place = function(args) {
 exports.moveFromPostion = function(position, face) {
     var newPosition = position.slice(0);
     switch(face) {
-        case 'NORTH':
+        case DIRECTIONS[0]:
             newPosition[1]++;
             break;
-        case 'SOUTH':
-            newPosition[1]--;
-            break;
-        case 'EAST':
+        case DIRECTIONS[1]:
             newPosition[0]--;
             break;
-        case 'WEST':
+        case DIRECTIONS[2]:
+            newPosition[1]--;
+            break;
+        case DIRECTIONS[3]:
             newPosition[0]++;
             break;
     }
