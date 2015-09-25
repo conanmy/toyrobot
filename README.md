@@ -1,2 +1,2 @@
 # toyrobot
-Toy Robot Simulator
+Toy Robot Simulator (standard input)
